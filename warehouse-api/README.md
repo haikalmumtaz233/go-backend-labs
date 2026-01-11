@@ -1,6 +1,6 @@
 # 📦 Warehouse Management API
 
-A robust RESTful API to manage warehouse inventory, suppliers, categories, and stock movements with audit trails.
+A simple RESTful API to manage warehouse inventory, suppliers, categories, and stock movements with audit trails.
 
 ## 🚀 Key Features
 

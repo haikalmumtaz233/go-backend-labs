@@ -8,6 +8,7 @@ A collection of backend projects and experiments built with **Go (Golang)**. Thi
 | :--- | :--- | :--- |
 | **[`/library-api`](./library-api)** | Library management system with borrowing logic. | Go, GORM, PostgreSQL |
 | **[`/warehouse-api`](./warehouse-api)** | Warehouse inventory, suppliers, categories, and stock movements management system with audit trails | Go, GORM, PostgreSQL |
+| **[`/warehouse-gin`](./warehouse-gin)** | Warehouse inventory, suppliers, categories, and stock movements management system with audit trails | Go, Gin, GORM, PostgreSQL |
 
 ## 🚀 How to Run
 
