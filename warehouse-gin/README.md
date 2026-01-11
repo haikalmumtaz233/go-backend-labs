@@ -3,22 +3,28 @@
 This project is a refactored version of my previous Warehouse API.
 It demonstrates the migration from Go's standard `net/http` library to **Gin Gonic**.
 
-## 🚀 Upgrade Highlights
+## 📐 Project Architecture
 
-Comparing this version to the previous standard library version:
+The application is structured into 4 distinct layers:
 
-* **Framework:** Switched to **Gin Gonic** for cleaner syntax and speed.
-* **Routing:** Implemented **Group Routing** (`/api`) and cleaner parameter handling (`:id`).
-* **Request Parsing:** Replaced manual `json.Decode` with Gin's `ShouldBindJSON` for automatic binding and validation.
-* **Response:** Using `c.JSON` for standardized JSON responses.
+```text
+wms-clean-arch/
+├── entity/       # 🟢 Domain Models
+├── repository/   # 🔵 Data Access Layer
+├── service/      # 🟡 Business Logic Layer
+├── handler/      # 🔴 HTTP Transport Layer
+└── main.go       # ⚙️ Dependency Injection & Wiring.
+```
 
 ## ⚡ Key Features
 
-* **Database:** PostgreSQL with **GORM**.
-* **Complex Relations:** One-to-Many (Category -> Products, Supplier -> Products).
-* **Atomic Transactions:** Stock adjustments (In/Out) are wrapped in DB Transactions to ensure data integrity.
-* **Audit Logging:** Automatically records every stock movement into a history table.
-* **Search:** Pattern matching search using SQL `ILIKE`.
+* **Clean Architecture:**
+  * **Dependency Injection:** Layers are connected in `main.go` (Handler -> Service -> Repository).
+  * **Interface-Oriented:** Services and Repositories rely on interfaces, making the code testable and flexible.
+* **Business Logic Isolation:** Logic like "Stock Checks" or "Validation" lives strictly in the Service layer, not in Handlers.
+* **Database:** PostgreSQL with GORM.
+* **Atomic Transactions:** Stock adjustments (In/Out) + Audit Logging are wrapped in DB Transactions (`tx`) within the Repository layer.
+* **Audit Trail:** Automatically records stock mutation history.
 
 ## 🔌 API Endpoints
 
@@ -34,10 +40,6 @@ Comparing this version to the previous standard library version:
 | **PUT** | `/products/:id` | Update product info |
 | **PATCH** | `/products/:id/stock` | **Adjust Stock** (In/Out logic) |
 | **DELETE** | `/products/:id` | Soft delete product |
-| **GET** | `/categories` | List categories |
-| **POST** | `/categories` | Create category |
-| **GET** | `/suppliers` | List suppliers |
-| **POST** | `/suppliers` | Create supplier |
 
 ## 🛠️ How to Run
 

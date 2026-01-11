@@ -1,37 +1,33 @@
 package main
 
 import (
-	"fmt"
+	"github.com/haikalmumtaz233/warehouse-gin/database"
+	"github.com/haikalmumtaz233/warehouse-gin/handler"
+	"github.com/haikalmumtaz233/warehouse-gin/repository"
+	"github.com/haikalmumtaz233/warehouse-gin/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	ConnectDB()
+	db := database.ConnectDB()
+
+	productRepo := repository.NewProductRepository(db)
+	productService := service.NewProductService(productRepo)
+	productHandler := handler.NewProductHandler(productService)
 
 	r := gin.Default()
-
 	api := r.Group("/api")
 	{
-		// -- Product Routes
-		api.GET("/products", listProducts)
-		api.GET("/products/:id", getProductbyId)
-		api.GET("/products/search", searchProduct)
-		api.GET("/products/:id/history", getProductHistory)
-		api.POST("/products", createProduct)
-		api.PUT("/products/:id", updateProduct)
-		api.PATCH("/products/:id/stock", adjustStock)
-		api.DELETE("/products/:id", deleteProduct)
+		api.GET("/products", productHandler.GetProducts)
+		api.GET("/products/:id", productHandler.GetProductByID)
+		api.POST("/products", productHandler.CreateProduct)
+		api.PUT("/products/:id", productHandler.UpdateProduct)
+		api.DELETE("/products/:id", productHandler.DeleteProduct)
 
-		// Category Routes
-		api.GET("/categories", getCategories)
-		api.POST("/categories", createCategory)
-
-		// Supplier Routes
-		api.GET("/suppliers", getSuppliers)
-		api.POST("/suppliers", createSupplier)
+		api.PATCH("/products/:id/stock", productHandler.AdjustStock)
+		api.GET("/products/:id/history", productHandler.GetHistory)
 	}
 
-	fmt.Println("Server running on http://localhost:8080...")
 	r.Run(":8080")
 }
