@@ -12,7 +12,7 @@ A collection of backend projects and experiments built with **Go (Golang)**. Thi
 
 1.  **Clone the repo:**
     ```bash
-    git clone [https://github.com/haikalmumtaz233/go-backend-labs.git](https://github.com/haikalmumtaz233/go-backend-labs.git)
+    git clone https://github.com/haikalmumtaz233/go-backend-labs.git
     cd go-backend-labs
     ```
 
