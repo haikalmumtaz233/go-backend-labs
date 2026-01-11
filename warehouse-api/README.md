@@ -1,30 +1,37 @@
-# 📦 Warehouse Management API (WMS Lite)
+# 📦 Warehouse Management API
 
-A simple RESTful API to manage warehouse inventory and stock movements.
+A robust RESTful API to manage warehouse inventory, suppliers, categories, and stock movements with audit trails.
 
 ## 🚀 Key Features
 
-* **CRUD Operations:** Create, Read, Update, Delete products.
+* **Relational Database:**
+    * **Products:** Linked with **Categories** and **Suppliers**.
+    * **Associations:** Uses GORM Preloading for fetching related data.
+* **Audit Trail System:**
+    * **Stock History:** Records every stock change (In/Out) in a `stock_mutations` table.
+    * **Atomic Transactions:** Uses Database Transactions (`tx`) to ensure stock updates and log recording happen simultaneously (ACID compliant).
 * **Security:**
-    * **Anti-SQL Injection:** Uses GORM parameterized queries for product searching.
+    * **Anti-SQL Injection:** Uses GORM parameterized queries.
     * **Environment Variables:** Sensitive data managed via `.env`.
 * **Smart Stock Management:**
-    * **Stock Adjustment:** Dedicated logic for handling Stock In/Out (prevents data race conditions).
     * **Validation:** Prevents negative stock during outgoing adjustments.
-* **Soft Delete System:**
-    * **Soft Delete:** Data is marked as deleted but kept in the DB for audit trails.
 
 ## 🔌 API Endpoints
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| **GET** | `/products` | Get all active products |
-| **GET** | `/products/{product_id}` | Get specific product detail |
+| **GET** | `/products` | Get all products (with Category & Supplier) |
+| **GET** | `/products/{id}` | Get specific product detail |
 | **GET** | `/products/search?q=...` | **Search** products by Name |
+| **GET** | `/products/{id}/history` | **Audit Log:** View stock mutation history |
 | **POST** | `/products` | Add a new product |
-| **PUT** | `/products/{product_id}` | Update product details (Name, Price) |
-| **PATCH** | `/products/{product_id}/stock` | **Adjust Stock** (In/Out logic) |
-| **DELETE** | `/products/{product_id}` | **Soft Delete** (Remove from list) |
+| **PUT** | `/products/{id}` | Update product details |
+| **PATCH** | `/products/{id}/stock` | **Adjust Stock** (In/Out with Transaction) |
+| **DELETE** | `/products/{id}` | **Soft Delete** product |
+| **GET** | `/categories` | Get all categories |
+| **POST** | `/categories` | Add a new category |
+| **GET** | `/suppliers` | Get all suppliers |
+| **POST** | `/suppliers` | Add a new supplier |
 
 ## 🛠️ How to Run
 
@@ -49,25 +56,27 @@ A simple RESTful API to manage warehouse inventory and stock movements.
 
 4.  **Start Server:**
     ```bash
-    go run main.go
+    go run .
     ```
     Server runs at `http://localhost:8080`.
 
 ## 📦 Data Samples (JSON)
 
 **1. POST /products (Add New Item)**
+*Requires existing Category ID and Supplier ID*
 ```json
 {
-  "product_name": "Mechanical Keyboard",
-  "product_price": 750000,
-  "product_stock": 50
+  "product_name": "Gaming Laptop",
+  "product_price": 15000000,
+  "product_stock": 10,
+  "category_id": 1,
+  "supplier_id": 1
 }
 ```
-
-**2. PATCH /products/{id}/stock (Stock Opname) Type can be "in" (Add stock) or "out" (Reduce stock).**
+**2. PATCH /products/{id}/stock (Stock Opname) Recorded in Audit Log**
 ```json
 {
-  "amount": 10,
+  "amount": 5,
   "type": "in"
 }
 ```
