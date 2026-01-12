@@ -187,9 +187,3 @@ curl -X POST http://localhost:8080/api/orders/1/pay \
   -H "Authorization: Bearer <token>" \
   -d '{"payment_method": "credit_card"}'
 ```
-
----
-
-## License
-
-This project is licensed under the MIT License.

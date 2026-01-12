@@ -9,6 +9,7 @@ A collection of backend projects and experiments built with **Go (Golang)**. Thi
 | **[`/library-api`](./library-api)** | Library management system with borrowing logic. | Go, GORM, PostgreSQL |
 | **[`/warehouse-api`](./warehouse-api)** | Warehouse inventory, suppliers, categories, and stock movements management system with audit trails | Go, GORM, PostgreSQL |
 | **[`/warehouse-gin`](./warehouse-gin)** | Warehouse inventory, suppliers, categories, and stock movements management system with audit trails | Go, Gin, GORM, PostgreSQL |
+| **[`/eventix`](./eventix)** | A scalable, production-ready backend for an event ticketing platform | Go, Gin, GORM, PostgreSQL |
 
 ## 🚀 How to Run
 
@@ -29,3 +30,9 @@ A collection of backend projects and experiments built with **Go (Golang)**. Thi
 
 * Go 1.22+
 * PostgreSQL (For API projects)
+
+---
+
+## License
+
+This project is licensed under the MIT License.
