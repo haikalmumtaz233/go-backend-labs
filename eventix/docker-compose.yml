@@ -1,0 +1,83 @@
+
+version: "3.8"
+
+services:
+  # ---------------------------------------------------------------------------
+  # Application Service
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eventix-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-eventix}
+      - DB_PASSWORD=${DB_PASSWORD:-eventix_secret}
+      - DB_NAME=${DB_NAME:-eventix_db}
+      - GIN_MODE=${GIN_MODE:-release}
+      - APP_ENV=${APP_ENV:-production}
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVER_PORT=8080
+    networks:
+      - eventix-network
+    depends_on:
+      db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+  db:
+    image: postgres:16-alpine
+    container_name: eventix-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER:-eventix}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-eventix_secret}
+      - POSTGRES_DB=${DB_NAME:-eventix_db}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    ports:
+      - "5432:5432"
+    volumes:
+      - eventix-postgres-data:/var/lib/postgresql/data
+    networks:
+      - eventix-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-eventix} -d ${DB_NAME:-eventix_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+
+# -----------------------------------------------------------------------------
+# Networks
+# -----------------------------------------------------------------------------
+
+networks:
+  eventix-network:
+    driver: bridge
+
+# -----------------------------------------------------------------------------
+# Volumes
+# -----------------------------------------------------------------------------
+volumes:
+  eventix-postgres-data:
+    driver: local
