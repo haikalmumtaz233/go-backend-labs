@@ -1,8 +1,10 @@
 # Eventix Backend
 
-![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)
+![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8?style=flat&logo=go)
 ![Gin Framework](https://img.shields.io/badge/Gin-1.11-00ADD8?style=flat)
 ![GORM](https://img.shields.io/badge/GORM-1.31-blue?style=flat)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=flat&logo=github-actions)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 
 A scalable, production-ready backend for an event ticketing platform. Built with **Go** featuring concurrency-safe ticket booking with mutex locks and asynchronous notification processing via goroutines and channels.
@@ -40,20 +42,24 @@ worker.StartEmailWorker(emailChan)
 eventix/
 ├── cmd/
 │   └── api/
-│       └── main.go              
+│       └── main.go                  
 ├── internal/
-│   ├── entity/                  
-│   ├── repository/              
-│   ├── service/                 
-│   ├── handler/                 
-│   └── middleware/              
+│   ├── entity/                      
+│   ├── repository/                  
+│   ├── service/                     
+│   ├── handler/                     
+│   └── middleware/                  
 ├── pkg/
-│   ├── database/                
-│   ├── utils/                   
-│   └── worker/                  
-├── .env                         
-├── go.mod
-└── go.sum
+│   ├── database/                    
+│   ├── utils/                       
+│   └── worker/                      
+├── .github/
+│   └── workflows/                   
+├── .env.example                     
+├── Dockerfile                       
+├── docker-compose.yml               
+├── go.mod                           
+└── go.sum                           
 ```
 
 ---
@@ -62,11 +68,14 @@ eventix/
 
 ### Prerequisites
 
-- **Go** 1.22 or higher
+- **Go** 1.23 or higher
 - **PostgreSQL** 12 or higher
+- **Docker** & **Docker Compose** (optional, for containerized deployment)
 - **Git**
 
-### Installation
+### Installation Options
+
+#### Option 1: Local Development (Go + PostgreSQL)
 
 ```bash
 cd eventix
@@ -76,6 +85,44 @@ go mod download
 
 # Setup environment variables
 cp .env.example .env
+# Edit .env with your database credentials
+```
+
+#### Option 2: Docker Compose
+
+```bash
+cd eventix
+
+# Setup environment variables
+cp .env.example .env
+
+# Start all services (app + PostgreSQL)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+#### Option 3: Docker Only
+
+```bash
+cd eventix
+
+# Build Docker image
+docker build -t eventix-backend .
+
+# Run container (requires external PostgreSQL)
+docker run -p 8080:8080 \
+  -e DB_HOST=host.docker.internal \
+  -e DB_PORT=5432 \
+  -e DB_USER=postgres \
+  -e DB_PASSWORD=your_password \
+  -e DB_NAME=eventix \
+  -e JWT_SECRET=your-secret-key \
+  eventix-backend
 ```
 
 ### Environment Configuration
@@ -103,19 +150,23 @@ SERVER_PORT=8080
 ```bash
 # Create database
 createdb eventix
-
-# Tables are auto-migrated on startup
 ```
 
 ### Run the Application
 
+**Local Development:**
 ```bash
-# Development
+# Development mode
 go run cmd/api/main.go
 
 # Build and run
 go build -o eventix cmd/api/main.go
 ./eventix
+```
+
+**Docker Compose:**
+```bash
+docker-compose up
 ```
 
 Server starts at `http://localhost:8080`

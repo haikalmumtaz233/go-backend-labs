@@ -11,7 +11,10 @@ A collection of backend projects and experiments built with **Go (Golang)**. Thi
 | **[`/warehouse-gin`](./warehouse-gin)** | Warehouse inventory, suppliers, categories, and stock movements management system with audit trails | Go, Gin, GORM, PostgreSQL |
 | **[`/eventix`](./eventix)** | A scalable, production-ready backend for an event ticketing platform | Go, Gin, GORM, PostgreSQL |
 
+
 ## 🚀 How to Run
+
+### Option 1: Manual Run (All Projects)
 
 1.  **Clone the repo:**
     ```bash
@@ -21,15 +24,23 @@ A collection of backend projects and experiments built with **Go (Golang)**. Thi
 
 2.  **Choose a project and run:**
     ```bash
-    cd library-api   # warehouse-api, etc.
+    cd library-api   # or warehouse-api, eventix
     go mod tidy
     go run main.go
     ```
 
+### Option 2: Docker Compose (Eventix Only)
+
+```bash
+cd eventix
+docker-compose up --build
+```
+
 ## 🛠️ Requirements
 
-* Go 1.22+
+* Go 1.25+
 * PostgreSQL (For API projects)
+* Docker & Docker Compose (Optional, for Eventix)
 
 ---
 
