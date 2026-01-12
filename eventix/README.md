@@ -4,7 +4,6 @@
 ![Gin Framework](https://img.shields.io/badge/Gin-1.11-00ADD8?style=flat)
 ![GORM](https://img.shields.io/badge/GORM-1.31-blue?style=flat)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
-![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=flat)
 
 A scalable, production-ready backend for an event ticketing platform. Built with **Go** featuring concurrency-safe ticket booking with mutex locks and asynchronous notification processing via goroutines and channels.
 
@@ -81,7 +80,7 @@ cp .env.example .env
 
 ### Environment Configuration
 
-Create a `.env` file in the project root:
+Edit a `.env` file in the project root:
 
 ```env
 # Database
